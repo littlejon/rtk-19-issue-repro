@@ -1,4 +1,8 @@
-import { configureStore, createAction } from "@reduxjs/toolkit";
+import {
+  autoBatchEnhancer,
+  configureStore,
+  createAction,
+} from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { createWrapper, Context, HYDRATE } from "next-redux-wrapper";
 
@@ -11,6 +15,9 @@ export const makeStore = (context: Context) => {
     reducer: {
       [api.reducerPath]: api.reducer,
       [counterSlice.name]: counterSlice.reducer,
+    },
+    enhancers: (existingEnhancers) => {
+      return existingEnhancers.concat(autoBatchEnhancer());
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
